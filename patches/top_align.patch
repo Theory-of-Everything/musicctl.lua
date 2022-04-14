@@ -1,0 +1,98 @@
+--- musicctl.lua	2022-04-14 20:26:39.583774508 -0600
++++ top_align.musicctl.lua	2022-04-14 20:25:54.341770877 -0600
+@@ -35,10 +35,15 @@
+ -- @theme beautiful.musicctl_bg
+ -- @tparam string color hex color code (default: '#2f383e')
+ 
++--- Transparent color of widgets (if patched in)
++-- @theme beautiful.musicctl_trs
++-- @tparam string color hex color code (default: '#00000000')
++
+ local thm_col = beautiful.musicctl_col or '#a7c080'
+ local thm_col_alt = beautiful.musicctl_col_alt or '#404d44'
+ local thm_fg = beautiful.musicctl_fg or '#d3c6aa'
+ local thm_bg = beautiful.musicctl_bg or '#2f383e'
++local thm_trs = beautiful.musicctl_trs or '#00000000'
+ 
+ -- {{{ helper functions
+ 
+@@ -101,16 +106,28 @@
+ local volwid = awful.popup({
+ 	widget = {
+ 		{
+-			volbar,
+-			textwid,
+-			text = M.current_mode,
+-			layout = wibox.layout.flex.vertical,
++			{
++				{
++					volbar,
++					textwid,
++					text = M.current_mode,
++					layout = wibox.layout.flex.vertical,
++				},
++				margins = 20,
++				widget = wibox.container.margin,
++			},
++			bg = thm_bg,
++			widget = wibox.container.background,
++			shape = rrect(10),
+ 		},
+-		margins = 20,
+-		widget = wibox.container.margin,
++		layout = wibox.container.margin,
++		left = 0,
++		top = 5,
++		bottom = 7,
++		right = 0,
+ 	},
+ 	fg = thm_fg,
+-	bg = thm_bg,
++	bg = thm_trs,
+ 	ontop = true,
+ 	visible = false,
+ 	shape = rrect(10),
+@@ -123,16 +140,28 @@
+ local statuswid = awful.popup({
+ 	widget = {
+ 		{
++			{
++				{
+ 
+-			ststitlewid,
+-			stswid,
+-			layout = wibox.layout.flex.vertical,
++					ststitlewid,
++					stswid,
++					layout = wibox.layout.flex.vertical,
++				},
++				margins = 20,
++				widget = wibox.container.margin,
++			},
++			bg = thm_bg,
++			widget = wibox.container.background,
++			shape = rrect(10),
+ 		},
+-		margins = 20,
+-		widget = wibox.container.margin,
++		layout = wibox.container.margin,
++		left = 0,
++		top = 5,
++		bottom = 7,
++		right = 0,
+ 	},
+ 	fg = thm_fg,
+-	bg = thm_bg,
++	bg = thm_trs,
+ 	ontop = true,
+ 	visible = false,
+ 	shape = rrect(10),
+@@ -158,6 +187,8 @@
+ })
+ -- }}}
+ 
++-- }}}
++
+ -- async func to get shell output and print volume to widget
+ local function spwn_volwid()
+ 	awful.spawn.easy_async_with_shell('playerctl --player ' .. M.current_mode .. ' volume', function(out)

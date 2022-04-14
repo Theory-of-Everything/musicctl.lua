@@ -1,0 +1,28 @@
+--- musicctl.lua	2022-04-14 14:02:10.894923198 -0600
++++ rubato.musicctl.lua	2022-04-14 14:02:05.850922794 -0600
+@@ -9,6 +9,7 @@
+ local beautiful = require('beautiful')
+ local gears = require('gears')
+ local wibox = require('wibox')
++local rubato = require('rubato')
+ 
+ local M = {}
+ 
+@@ -157,6 +158,17 @@
+ 	end,
+ })
+ -- }}}
++
++-- {{{ animation objects
++-- eased bar shifting
++local vol_timed = rubato.timed({
++	intro = 0.1,
++	duration = 0.3,
++	subscribed = function(num)
++		volbar.value = num
++	end,
++})
++-- }}}
+ 
+ -- async func to get shell output and print volume to widget
+ local function spwn_volwid()
